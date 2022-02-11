@@ -150,9 +150,17 @@ let watchlists = [
     watchlistName: "streetwear",
     watchlist: [
       "rtfkt-mnlth",
+      "rtfkt-podx",
       "adam-bomb-squad",
       "clonex",
       "stapleverse-feed-clan",
     ]
   },
+  {
+    watchlistName: "chubbi",
+    watchlist: [
+      "chubbiverse-frens",
+      "chubbicorns"
+    ]
+  }
 ]
