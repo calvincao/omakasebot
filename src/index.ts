@@ -98,7 +98,10 @@ let watchlists = [
   {
     watchlistName: "kwaji",
     watchlist: [
-      "boredapeyachtclub"
+      "boredapeyachtclub",
+      "mutant-ape-yacht-club",
+      "mfers",
+      "chainfaces-arena"
     ]
   },
   {
@@ -114,7 +117,7 @@ let watchlists = [
     watchlist: [
       "boredapeyachtclub",
       "mutant-ape-yacht-club",
-      "bored-ape-kennel-club"
+      "bored-ape-kennel-club",
     ]
   },
   {
@@ -139,6 +142,15 @@ let watchlists = [
       "livesofasuna",
       "killergf",
       "supernormalbyzipcy"
+    ]
+  },
+  {
+    watchlistName: "streetwear",
+    watchlist: [
+      "rtfkt-mnlth",
+      "adam-bomb-squad",
+      "clonex",
+      "stapleverse-feed-clan",
     ]
   },
 ]
