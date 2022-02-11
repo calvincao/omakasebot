@@ -109,7 +109,9 @@ let watchlists = [
     watchlist: [
       "boredapeyachtclub",
       "azuki",
-      "coolpetsnft"
+      "coolpetsnft",
+      "doodles-official",
+      "clonex"
     ]
   },
   {
