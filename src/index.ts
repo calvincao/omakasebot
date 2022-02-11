@@ -107,7 +107,7 @@ let watchlists = [
   {
     watchlistName: "uh",
     watchlist: [
-      "boredapeyachtclub",
+      "mutant-ape-yacht-club",
       "azuki",
       "coolpetsnft",
       "doodles-official",
