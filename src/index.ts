@@ -17,10 +17,11 @@ client.once("ready", () => {
 });
 
 client.on("message", async (msg: Message) => {
-  if (msg.content === "omakase") {
+  let messageContent = msg.content.toLowerCase();
+  if (messageContent === "omakase") {
     msg.reply("❤️‍🔥");
-  } else if (msg.content.startsWith("!floor")) {
-    const [_command, collectionName] = msg.content.split(" ");
+  } else if (messageContent.startsWith("!floor")) {
+    const [_command, collectionName] = messageContent.split(" ");
 
     if (collectionName === undefined) {
       msg.reply(`${collectionName}: ${lastFloorPrice} Ξ`);
@@ -36,8 +37,8 @@ client.on("message", async (msg: Message) => {
       }
       return;
     }
-  } else if (msg.content.startsWith("!watchlist")) {
-    const [_command, watchlistName] = msg.content.split(" ");
+  } else if (messageContent.startsWith("!watchlist")) {
+    const [_command, watchlistName] = messageContent.split(" ");
 
     if (watchlistName === undefined) {
       msg.reply(`${watchlistName}: ${lastFloorPrice} Ξ`);
