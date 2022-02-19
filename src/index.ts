@@ -65,7 +65,25 @@ client.on("message", async (msg: Message) => {
       msg.reply("That watchlist doesn't exist. Contact omakasemoney");
       return;
     }
+   } else if (messageContent.startsWith("!price")) {
+    const [_command, tokenName] = messageContent.split(" ");
+
+    if (tokenName === undefined) {
+      msg.reply('uh');
+      return;
+    } else {
+      const tokenPrice = await getTokenPrice(tokenName);
+      if (tokenName) {
+        msg.reply(`${tokenName}: ${tokenPrice}`);
+      } else {
+        msg.reply(
+          `I couldn't find ${tokenName}.`
+        );
+      }
+      return;
+    }
   }
+
 });
 
 const main = async () => {
@@ -90,6 +108,19 @@ const getFloorPrice = async (collectionName = process.env.COLLECTION_NAME) => {
     const json = await response.json();
 
     return json.stats.floor_price;
+  } catch {
+    return null;
+  }
+};
+
+const getTokenPrice = async (tokenName = process.env.TOKEN_NAME) => {
+  try {
+    const response = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${tokenName}`
+    );
+    const json = await response.json();
+
+    return json.market_data.current_price.usd;
   } catch {
     return null;
   }
