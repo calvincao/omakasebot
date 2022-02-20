@@ -52,6 +52,13 @@ client.on("message", async (msg: Message) => {
             let floorPrice = await getFloorPrice(watchlists[i].watchlist[j]);
             message = message + "\n" + watchlists[i].watchlist[j] + ": " + floorPrice + " eth";
           }
+          if(watchlists[i].coins !== undefined) {
+            let coinsLength = watchlists[i].coins?.length || 0;
+            for(let j = 0; j < coinsLength; ++j) {
+              let floorPrice = await getTokenPrice(watchlists[i].coins[j]);
+              message = message + "\n" + watchlists[i].coins[j] + ": " + floorPrice;
+            }
+          }
           if (message) {!
             msg.reply(message);
           } else {
@@ -134,6 +141,9 @@ let watchlists = [
       "mutant-ape-yacht-club",
       "mfers",
       "chainfaces-arena"
+    ],
+    coins: [
+      "ethereum"
     ]
   },
   {
@@ -144,7 +154,8 @@ let watchlists = [
       "coolpetsnft",
       "doodles-official",
       "clonex"
-    ]
+    ],
+    coins: []
   },
   {
     watchlistName: "apes",
@@ -152,21 +163,24 @@ let watchlists = [
       "boredapeyachtclub",
       "mutant-ape-yacht-club",
       "bored-ape-kennel-club",
-    ]
+    ],
+    coins: []
   },
   {
     watchlistName: "cc",
     watchlist: [
       "cool-cats-nft",
       "coolpetsnft"
-    ]
+    ],
+    coins: []
   },
   {
     watchlistName: "mice",
     watchlist: [
       "anonymice",
       "anonymicebreeding"
-    ]
+    ],
+    coins: []
   },
   {
     watchlistName: "weeb3",
@@ -176,7 +190,8 @@ let watchlists = [
       "livesofasuna",
       "killergf",
       "supernormalbyzipcy"
-    ]
+    ],
+    coins: []
   },
   {
     watchlistName: "streetwear",
@@ -186,13 +201,15 @@ let watchlists = [
       "adam-bomb-squad",
       "clonex",
       "stapleverse-feed-clan",
-    ]
+    ],
+    coins: []
   },
   {
     watchlistName: "chubbi",
     watchlist: [
       "chubbiverse-frens",
       "chubbicorns"
-    ]
+    ],
+    coins: []
   }
 ]
