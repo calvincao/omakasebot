@@ -211,5 +211,14 @@ let watchlists = [
       "chubbicorns"
     ],
     coins: []
+  },
+  {
+    watchlistName: "staples",
+    watchlist: [
+      "stapleverse-feed-clan",
+      "stapleverse-hood-squad",
+      "stapleverse-poop-gang"
+    ],
+    coins: []
   }
 ]
