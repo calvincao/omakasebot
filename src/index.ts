@@ -89,6 +89,23 @@ client.on("message", async (msg: Message) => {
       }
       return;
     }
+  } else if (messageContent.startsWith("ticker")) {
+    const [_command, ticker] = messageContent.split(" ");
+
+    if (ticker === undefined) {
+      msg.reply('uh');
+      return;
+    } else {
+      const stockPrice = await getStockPrice(ticker);
+      if (ticker) {
+        msg.reply(`${ticker}: ${stockPrice}`);
+      } else {
+        msg.reply(
+          `I couldn't find ${ticker}.`
+        );
+      }
+      return;
+    }
   }
 
 });
@@ -128,6 +145,23 @@ const getTokenPrice = async (tokenName = process.env.TOKEN_NAME) => {
     const json = await response.json();
 
     return json.market_data.current_price.usd;
+  } catch {
+    return null;
+  }
+};
+
+const getStockPrice = async (tickerName = process.env.TICKER_NAME) => {
+  try {
+    const response = await fetch(
+      `https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${tickerName}`,
+      {
+       headers: {
+         'X-API-KEY': process.env.YFI_API_KEY,
+      } 
+      }
+    );
+    const json = await response.json();
+    return json.quoteResponse.result[0].regularMarketPrice;
   } catch {
     return null;
   }
