@@ -198,7 +198,9 @@ let watchlists = [
       "mutant-ape-yacht-club",
       "bored-ape-kennel-club",
     ],
-    coins: []
+    coins: [
+      "apecoin"
+    ]
   },
   {
     watchlistName: "cc",
