@@ -106,6 +106,28 @@ client.on("message", async (msg: Message) => {
       }
       return;
     }
+  } else if (messageContent.startsWith("!dex")) {
+    let [_command, pairAddress] = messageContent.split(" ");
+    if (pairAddress === "looks") {
+      pairAddress = "0x4b5ab61593a2401b1075b90c04cbcdd3f87ce011";
+    }
+    else if (pairAddress === "cfti") {
+      pairAddress = "0x6a8c06aeef13aab2cdd51d41e41641630c41f5ff";
+    }
+    if (pairAddress === undefined) {
+      msg.reply('uh');
+      return;
+    } else {
+      const result = await getDexPairPrice(pairAddress);
+      if (pairAddress) {
+        msg.reply(`${result?.token}: ${result?.price}`);
+      } else {
+        msg.reply(
+          `Didn't work for: ${pairAddress}.`
+        );
+      }
+      return;
+    }
   }
 
 });
@@ -162,6 +184,22 @@ const getStockPrice = async (tickerName = process.env.TICKER_NAME) => {
     );
     const json = await response.json();
     return json.quoteResponse.result[0].regularMarketPrice;
+  } catch {
+    return null;
+  }
+};
+
+const getDexPairPrice = async (pairAddress = process.env.PAIR_ADDRESS) => {
+  try {
+    const response = await fetch(
+      `https://api.dexscreener.io/latest/dex/pairs/ethereum/${pairAddress}`
+    );
+    const json = await response.json();
+
+    return {
+      "token": json.pair.baseToken.symbol,
+      "price": json.pair.priceUsd
+    }
   } catch {
     return null;
   }
