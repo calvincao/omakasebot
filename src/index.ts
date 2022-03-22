@@ -114,6 +114,9 @@ client.on("message", async (msg: Message) => {
     else if (pairAddress === "cfti") {
       pairAddress = "0x6a8c06aeef13aab2cdd51d41e41641630c41f5ff";
     }
+    else if (pairAddress === "ape") {
+      pairAddress = "0xac4b3dacb91461209ae9d41ec517c2b9cb1b7daf";
+    }
     if (pairAddress === undefined) {
       msg.reply('uh');
       return;
