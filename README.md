@@ -19,6 +19,9 @@ This example starts a Discord bot using [discord.js](https://discord.js.org) and
 
 ## 💁‍♀️ How to use
 
+- Create a .env file using the template, './.env.sample'
+- Set up a Postgres DB and use the setup code in './src/tables.sql'
+- If you're using node, make sure to use 16.13 or higher
 - Install dependencies `yarn`
 - Connect to your Railway project `railway link`
 - Start the bot `railway run yarn dev`

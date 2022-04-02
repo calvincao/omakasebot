@@ -10,12 +10,15 @@
     "start": "node ."
   },
   "dependencies": {
+    "@railway/cli": "^1.4.0",
     "@types/jsdom": "^16.2.14",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "got": "^9.6.0",
     "jsdom": "^19.0.0",
-    "node-fetch": "2"
+    "node-fetch": "2",
+    "pg": "^8.7.3",
+    "railway": "^2.0.17"
   },
   "devDependencies": {
     "@types/node": "^16.6.2",

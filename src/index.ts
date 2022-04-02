@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 const got = require("got");
 const jsdom = require("jsdom");
+const wl = require('./wl');
 dotenv.config();
 
 // @ts-expect-error
@@ -16,10 +17,98 @@ client.once("ready", () => {
   console.log(`Logged in as ${client.user?.tag}!`);
 });
 
-client.on("message", async (msg: Message) => {
+client.on("messageCreate", async (msg: Message) => {
   let messageContent = msg.content.toLowerCase();
+  const message = messageContent.split(' ');
+  if (messageContent === '!help') {
+    msg.reply(`!wl <wlname>\nreturns a list of all nfts in watchlist <wlname>\n!wl -c <wlname>\ncreates new watchlist <wlname>\n!wl -a-os <wlname> <osname>\nadd nft <osname> to watchlist <wlname>\n!wl -rm-os <wlname> <osname>\nremove <osname> from watchlist <wlname>\n`);
+    return;
+  }
+  if (message[0] === '!register' && message.length === 1) {
+    const user = {
+      name: `${msg.author.username}#${msg.author.discriminator}`,
+      ID: msg.author.id
+    }
+    if(await wl.register(user) === true) msg.reply(`${user.name}, ID:${user.ID} successfully registered`)
+    else msg.reply('Error: User already registered!')
+  }
+  if (message[0] === '!wl' && message.length === 1){
+    const user = {
+      name: ``,
+      ID: ``
+    }
+  }
+  if (message[0] === '!wl' && message[1] === '-c'){
+    const wlname = message.slice(2).join(' ');
+    const watchlist = {
+      owner: msg.author.id,
+      name: wlname
+    }
+    if (await wl.create(watchlist) === true){
+      msg.reply(`📓📓 User ID #${watchlist.owner} has created the watchlist - '${watchlist.name}'`);
+    }
+    else msg.reply(`⛔️⛔️ User ID #${watchlist.owner} already has a watchlist named: '${watchlist.name}'`);
+    return;
+  }
+  if (message[0] === '!wl' && message[1] === '-a-os'){
+    const wlname = message.slice(2, -1).join(' ');
+    const osname = message.slice(-1).join('');
+    const watchlist = {
+      owner: msg.author.id,
+      name: wlname,
+      nft: osname
+    }
+    const status = await wl.add(watchlist)
+    if (status === 'nft added'){
+      msg.reply(`✏️📜 ${watchlist.nft} has been added to watchlist - '${watchlist.name}.'`);
+    }
+    else if (status === 'nft already in wl'){
+      msg.reply(`⛔️⛔️ ${watchlist.nft} is already in '${watchlist.name}'.`);
+    }
+    else if (status === 'no wl in db'){
+      msg.reply(`⛔️⛔️ No watchlist with that name('${watchlist.name}') is found.`)
+    }
+    else msg.reply(`Error adding nft to watchlist...`)
+    return
+  }
+
+  if (message[0] === '!wl' && message[1] === '-ls' && message.length === 2){
+    // returns a list of all watchlists belonging to user
+    const owner = msg.author.id;
+    const lists = await wl.list(owner);
+    let reply = `User #${owner}'s watchlists:\n`;
+    for (const list of lists){
+      reply += `${list.wl_name}` + `\n`;
+    }
+    msg.reply(reply);
+    return;
+  }
+
+  if (message[0] === '!wl' && message[1] === '-ls' && message.length > 2){
+    // show prices for certain watchlists
+    const wlname = message.slice(2).join(' ');
+    const watchlist = {
+      owner: msg.author.id,
+      name: wlname
+    }
+    let reply = `NFTs in '${watchlist.name}':\n`;
+    const list = await wl.getListItems(watchlist);
+    if (list === false) msg.reply(`'${watchlist.name}' does not exist...`)
+    else if (!list.length) msg.reply(`'${watchlist.name}' is empty...`);
+    // change this to promise all to batch requests
+    for (let i = 0; i < list.length; i++){
+      const nft = list[i].os_name;
+      const floorPrice = await getFloorPrice(nft);
+      reply += `${nft}: ${floorPrice} Ξ\n`;
+    }
+    msg.reply(reply);
+    return;
+  }
+
+
+
   if (messageContent === "omakase") {
-    msg.reply("❤️‍🔥");
+    msg.reply(`❤️‍🔥 hello ${msg.author.username}#${msg.author.discriminator} (ID: ${msg.author.id})`);
   } else if (messageContent.startsWith("!floor")) {
     const [_command, collectionName] = messageContent.split(" ");
 
