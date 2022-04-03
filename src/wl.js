@@ -98,4 +98,41 @@ wl.getListItems = async (watchlist) => {
   }
 };
 
+wl.removeList = async (watchlist) => {
+  wl.register(watchlist.owner);
+  const { owner, name } = watchlist;
+  const listCheckQuery = 'SELECT _id FROM "public"."watchlists" WHERE discord_id=$1 AND wl_name=$2';
+  const deleteWLNFT = 'DELETE FROM wl_nfts WHERE wl_id=$1';
+  const deleteWL = 'DELETE FROM watchlists WHERE _id=$1';
+  // gotta delete from wl_nfts first before deleting from watchlists
+  try {
+    let listID = await db.query(listCheckQuery, [owner, name]);
+    if (!listID.rows.length) return `⛔️ '${name}' does not exist...`;
+    listID = listID.rows[0]._id;
+    await db.query(deleteWLNFT, [listID]);
+    await db.query(deleteWL, [listID]);
+    return `💀 '${name}' has been deleted...`;
+  } catch (err) {
+    console.log('-=-=-=-=-=-=-=-=-error in wl.removeList-=-=-=-=-=-=-=-=-');
+    console.log(err);
+  }
+};
+
+wl.removeFromList = async (watchlist) => {
+  wl.register(watchlist.owner);
+  const { owner, name, nft } = watchlist;
+  const listCheckQuery = 'SELECT _id FROM "public"."watchlists" WHERE discord_id=$1 AND wl_name=$2';
+  const deleteQuery = 'DELETE FROM wl_nfts WHERE wl_id=$1 AND os_name=$2';
+  try {
+    let listID = await db.query(listCheckQuery, [owner, name]);
+    if (!listID.rows.length) return `⛔️ '${name}' does not exist...`;
+    listID = listID.rows[0]._id;
+    await db.query(deleteQuery, [listID, nft]);
+    return `${nft} has been removed from '${name}'`;
+  } catch (err) {
+    console.log('-=-=-=-=-=-=-=-=-error in wl.removeFromList-=-=-=-=-=-=-=-=-');
+    console.log(err);
+  }
+};
+
 module.exports = wl;

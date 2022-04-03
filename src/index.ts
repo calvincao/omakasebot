@@ -21,9 +21,10 @@ client.on("messageCreate", async (msg: Message) => {
   let messageContent = msg.content.toLowerCase();
   const message = messageContent.split(' ');
   if (messageContent === '!help') {
-    msg.reply(`Here are a list of commands for this bot!\n!wl -ls <wlname>\nreturns a list of all nfts in watchlist <wlname>\n!wl -c <wlname>\ncreates new watchlist <wlname>\n!wl -a-os <wlname> <osname>\nadd nft <osname> to watchlist <wlname>\n!wl -rm-os <wlname> <osname>\nremove <osname> from watchlist <wlname>\n`);
+    msg.reply(`Here are a list of commands for this bot!\n\`wl ls <wlname>\`\nreturns a list of all nfts in watchlist <wlname>\n\`wl c <wlname>\`\ncreates new watchlist <wlname>\n\`wl a <wlname> <nft>\`\nadd nft <nft> to watchlist <wlname>\n\`wl rm <wlname> <nft>\`\nremove <nft> from watchlist <wlname>\n`);
     return;
   }
+  
   // if (message[0] === '!register' && message.length === 1) {
   //   const user = {
   //     name: `${msg.author.username}#${msg.author.discriminator}`,
@@ -33,7 +34,7 @@ client.on("messageCreate", async (msg: Message) => {
   //   else msg.reply('Error: User already registered!')
   // }
 
-  if (message[0] === '!wl' && message[1] === '-c'){
+  if (message[0] === 'wl' && message[1] === 'c'){
     const wlname = message.slice(2).join(' ');
     const watchlist = {
       owner: msg.author.id,
@@ -45,9 +46,9 @@ client.on("messageCreate", async (msg: Message) => {
   }
 
 
-  if (message[0] === '!wl' && message[1] === '-a-os'){
-    const wlname = message.slice(2, -1).join(' ');
-    const osname = message.slice(-1).join('');
+  if (message[0] === 'wl' && message[1] === 'a'){
+    const wlname = message[2];
+    const osname = message[3];
     const watchlist = {
       owner: msg.author.id,
       name: wlname,
@@ -58,7 +59,7 @@ client.on("messageCreate", async (msg: Message) => {
     return
   }
 
-  if (message[0] === '!wl' && message[1] === '-ls' && message.length === 2){
+  if (message[0] === 'wl' && message[1] === 'ls' && message.length === 2){
     // returns a list of all watchlists belonging to user
     const owner = msg.author.id;
     const status = await wl.list(owner);
@@ -66,9 +67,9 @@ client.on("messageCreate", async (msg: Message) => {
     return;
   }
 
-  if (message[0] === '!wl' && message[1] === '-ls' && message.length > 2){
+  if (message[0] === 'wl' && message[1] === 'ls' && message.length > 2){
     // show prices for certain watchlists
-    const wlname = message.slice(2).join(' ');
+    const wlname = message[2];
     const watchlist = {
       owner: msg.author.id,
       name: wlname
@@ -95,6 +96,30 @@ client.on("messageCreate", async (msg: Message) => {
       })
       .catch(err => console.log(err))
     msg.reply(reply);
+    return;
+  }
+
+  if (message[0] === 'wl' && message[1] === 'rm' && message.length === 3){
+    const wlname = message[2];
+    const watchlist = {
+      owner: msg.author.id,
+      name: wlname
+    }
+    const status = await wl.removeList(watchlist);
+    msg.reply(status);
+    return;
+  }
+
+  if (message[0] === 'wl' && message[1] === 'rm' && message.length > 3){
+    const name = message[2];
+    const nft = message[3]
+    const watchlist = {
+      owner: msg.author.id,
+      name: name,
+      nft: nft
+    }
+    const status = await wl.removeFromList(watchlist);
+    msg.reply(status);
     return;
   }
 
